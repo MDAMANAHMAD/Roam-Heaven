@@ -12,28 +12,19 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const ExpressError = require('./utils/expresserror.js');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-console.log(">>> DEPLOYMENT VERSION: SMTP_FIX_V3 <<<");
+console.log(">>> DEPLOYMENT VERSION: RESEND_API_V4 <<<");
 
-// Email Transporter Setup
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    },
-    connectionTimeout: 15000, // 15 seconds
-    greetingTimeout: 15000,
-    socketTimeout: 15000
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendConfirmationEmail = async (to, bookingDetails) => {
     try {
-        console.log(`Sending confirmation email to: ${to} using ${process.env.EMAIL_USER}`);
-        const mailOptions = {
-            from: `"Roam Heaven" <${process.env.EMAIL_USER}>`,
-            to: to,
+        console.log(`Attempting to send booking email to: ${to} using Resend API`);
+        
+        const { data, error } = await resend.emails.send({
+            from: 'Roam Heaven <onboarding@resend.dev>',
+            to: [to],
             subject: 'Roam Heaven Booking Confirmation',
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 20px; overflow: hidden;">
@@ -59,14 +50,15 @@ const sendConfirmationEmail = async (to, bookingDetails) => {
                     </div>
                 </div>
             `
-        };
-        const info = await transporter.sendMail(mailOptions);
-        console.log("Email sent successfully:", info.messageId);
-    } catch (error) {
-        console.error("CRITICAL EMAIL ERROR:", error.message);
-        if (error.code === 'EAUTH') {
-            console.error("AUTHENTICATION FAILED: Please check EMAIL_USER and EMAIL_PASS on Render.");
+        });
+
+        if (error) {
+            console.error("RESEND API ERROR:", error);
+        } else {
+            console.log("Email sent successfully via Resend:", data.id);
         }
+    } catch (err) {
+        console.error("CRITICAL RESEND ERROR:", err.message);
     }
 };
 
