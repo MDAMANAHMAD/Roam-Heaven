@@ -2,11 +2,13 @@ const mongoose = require("mongoose");
 const initData = require("./data.js");
 const List = require("../models/list.js");
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+require('dotenv').config({ path: '../.env' });
+const MONGO_URL = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/wanderlust";
 
 main()
   .then(() => {
     console.log("connected to DB");
+    initDB();
   })
   .catch((err) => {
     console.log(err);
@@ -22,4 +24,3 @@ const initDB = async () => {
   console.log("data was initialized");
 };
 
-initDB();
