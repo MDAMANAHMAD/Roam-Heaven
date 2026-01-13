@@ -81,17 +81,27 @@ async function main() {
     await mongoose.connect(dbUrl);
     console.log("Connected to DB");
     
-    // Seed Admin User
+    // Seed Users
     try {
+        // Admin
         const adminEmail = process.env.EMAIL_USER || "admin@gmail.com";
         const adminUser = await User.findOne({ email: adminEmail });
         if (!adminUser) {
             const newAdmin = new User({ email: adminEmail, username: "admin", role: "admin" });
             await User.register(newAdmin, "admin123");
-            console.log(`Admin user created: ${adminEmail} / admin123`);
+            console.log(`Admin user seeded: ${adminEmail}`);
+        }
+
+        // Demo User
+        const demoEmail = "user@gmail.com";
+        const demoUser = await User.findOne({ email: demoEmail });
+        if (!demoUser) {
+            const newUser = new User({ email: demoEmail, username: "demo_user", role: "user" });
+            await User.register(newUser, "password123");
+            console.log("Demo user seeded: user@gmail.com");
         }
     } catch (e) {
-        console.log("Admin already exists or seeding error:", e.message);
+        console.log("Seeding notice:", e.message);
     }
 }
 main().catch(err => console.log(err));

@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 function Signup() {
     const [formData, setFormData] = useState({ username: '', email: '', password: '' });
@@ -29,7 +29,7 @@ function Signup() {
 
     return (
         <div style={{ maxWidth: '400px', margin: '80px auto' }}>
-            <h1 style={{ textAlign: 'center', marginBottom: '32px' }}>Join Wanderlust</h1>
+            <h1 style={{ textAlign: 'center', marginBottom: '32px' }}>Join Roam Heaven</h1>
             <form onSubmit={handleSubmit} className="card" style={{ padding: '32px', background: 'white' }}>
                 {error && <div style={{ color: '#ff385c', marginBottom: '16px', fontSize: '14px' }}>{error}</div>}
                 <div className="form-group">

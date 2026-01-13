@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 function Login() {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -38,7 +38,7 @@ function Login() {
                         type="button" 
                         className="btn btn-outline" 
                         style={{ flex: 1, fontSize: '13px' }}
-                        onClick={() => setFormData({ email: 'admin@gmail.com', password: 'admin123' })}
+                        onClick={() => setFormData({ email: 'roamheavenofficials@gmail.com', password: 'admin123' })}
                     >
                         Demo Admin
                     </button>
