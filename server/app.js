@@ -16,7 +16,9 @@ const nodemailer = require('nodemailer');
 
 // Email Transporter Setup
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
@@ -25,30 +27,43 @@ const transporter = nodemailer.createTransport({
 
 const sendConfirmationEmail = async (to, bookingDetails) => {
     try {
+        console.log(`Sending confirmation email to: ${to} using ${process.env.EMAIL_USER}`);
         const mailOptions = {
-            from: process.env.EMAIL_USER,
+            from: `"Roam Heaven" <${process.env.EMAIL_USER}>`,
             to: to,
             subject: 'Roam Heaven Booking Confirmation',
             html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <h1 style="color: #ff385c;">Booking Confirmed!</h1>
-                    <p>Dear Customer,</p>
-                    <p>Thank you for booking with Roam Heaven. Here are your details:</p>
-                    <div style="background: #f7f7f7; padding: 20px; border-radius: 10px;">
-                        <h3>${bookingDetails.listing.title}</h3>
-                        <p><strong>Check-in:</strong> ${new Date(bookingDetails.checkIn).toLocaleDateString()}</p>
-                        <p><strong>Check-out:</strong> ${new Date(bookingDetails.checkOut).toLocaleDateString()}</p>
-                        <p><strong>Guests:</strong> ${bookingDetails.guests}</p>
-                        <p><strong>Total Price:</strong> ₹${bookingDetails.totalPrice}</p>
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 20px; overflow: hidden;">
+                    <div style="background: #ff385c; padding: 30px; text-align: center;">
+                        <h1 style="color: white; margin: 0; font-size: 28px;">Booking Confirmed!</h1>
                     </div>
-                    <p>Have a great trip!</p>
+                    <div style="padding: 30px;">
+                        <p style="font-size: 16px; color: #222;">Dear Customer,</p>
+                        <p style="font-size: 16px; color: #484848;">Your stay at <strong>${bookingDetails.listing.title}</strong> is confirmed. Pack your bags!</p>
+                        
+                        <div style="background: #f7f7f7; padding: 25px; border-radius: 15px; margin: 25px 0;">
+                            <h3 style="margin-top: 0; color: #222;">Trip Details</h3>
+                            <p style="margin: 8px 0;"><strong>Check-in:</strong> ${new Date(bookingDetails.checkIn).toLocaleDateString()}</p>
+                            <p style="margin: 8px 0;"><strong>Check-out:</strong> ${new Date(bookingDetails.checkOut).toLocaleDateString()}</p>
+                            <p style="margin: 8px 0;"><strong>Guests:</strong> ${bookingDetails.guests}</p>
+                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd; font-size: 18px; font-weight: bold;">
+                                Total Price: ₹${bookingDetails.totalPrice.toLocaleString('en-IN')}
+                            </div>
+                        </div>
+                        
+                        <p style="color: #717171; font-size: 14px;">If you have any questions, feel free to reply to this email.</p>
+                        <p style="margin-top: 30px; font-weight: bold; color: #222;">The Roam Heaven Team</p>
+                    </div>
                 </div>
             `
         };
-        await transporter.sendMail(mailOptions);
-        console.log("Email sent successfully");
+        const info = await transporter.sendMail(mailOptions);
+        console.log("Email sent successfully:", info.messageId);
     } catch (error) {
-        console.error("Error sending email:", error);
+        console.error("CRITICAL EMAIL ERROR:", error.message);
+        if (error.code === 'EAUTH') {
+            console.error("AUTHENTICATION FAILED: Please check EMAIL_USER and EMAIL_PASS on Render.");
+        }
     }
 };
 
