@@ -17,8 +17,8 @@ const nodemailer = require('nodemailer');
 // Email Transporter Setup
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false, // Use STARTTLS
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
@@ -95,7 +95,7 @@ async function main() {
     const dbUrl = process.env.ATLASDB_URL || 'mongodb://127.0.0.1:27017/wanderlust';
     await mongoose.connect(dbUrl);
     console.log("Connected to DB");
-    
+
     // Seed Users
     try {
         // Admin
@@ -151,17 +151,17 @@ app.post('/api/auth/login', async (req, res) => {
         // Authenticate using the username from the found user
         try {
             const { user } = await User.authenticate()(userFound.username, password);
-             if (!user) {
+            if (!user) {
                 console.log("Password verification failed for:", userFound.username);
                 return res.status(400).json({ error: "Invalid password" });
             }
             const token = jwt.sign({ id: user._id, username: user.username, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
             res.json({ token, user: { id: user._id, username: user.username, email: user.email, role: user.role } });
         } catch (authError) {
-             console.log("Authentication error:", authError);
-             return res.status(400).json({ error: "Authentication failed" });
+            console.log("Authentication error:", authError);
+            return res.status(400).json({ error: "Authentication failed" });
         }
-       
+
     } catch (err) {
         console.error("Login server error:", err);
         res.status(500).json({ error: err.message });
@@ -206,7 +206,7 @@ app.put('/api/listings/:id', authenticateToken, async (req, res) => {
         }
         const { id } = req.params;
         const { title, description, url, price, location, country } = req.body;
-        
+
         const updatedListing = await List.findByIdAndUpdate(id, {
             title,
             description,
@@ -230,7 +230,7 @@ app.delete('/api/listings/:id', authenticateToken, async (req, res) => {
         }
         const { id } = req.params;
         const deletedListing = await List.findByIdAndDelete(id);
-        
+
         if (!deletedListing) return res.status(404).json({ error: "Listing not found" });
         res.json({ message: "Listing deleted successfully" });
     } catch (err) {
@@ -252,10 +252,10 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
             totalPrice
         });
         await booking.save();
-        
+
         // Populate listing details for email
         await booking.populate('listing');
-        
+
         // Get user email to send confirmation (using req.user info or fetching full user)
         const user = await User.findById(req.user.id);
         if (user && user.email) {
