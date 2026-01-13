@@ -1,0 +1,60 @@
+<% layout('layouts/boilerplate') %>
+<body>
+    <div class="row">
+        <div class="col-8 offset-2">
+    <h3><%= listen.title %></h3>
+    <div class="card" style="width: 18rem;">
+        <img src="<%= listen.image.url%>" class="card-img-top show img" alt="listing image">
+        <div class="card-body">
+         
+        <ul>
+            <li><%= listen.location %></li>
+           
+           <li><%= listen.description %></li>
+        
+           <li>&#8377;<%= listen.price.toLocaleString('en-IN') %></li>
+            
+           <li><%= listen.country %></li>
+
+        </ul>
+           
+             
+          <p class="card-text"></p>
+
+        </div>
+    </div>
+        </div>
+      </div>
+    <div class = 'edit'>
+        <a href="/listing/<%= listen._id %>/edit"><button class = "btn btn-danger">Edit</button></a>
+        <br>
+        <form method="post" action="/listing/<%= listen._id %>?_method=DELETE" onsubmit="return confirm('Are you sure you want to delete this listing?');">
+            <button class = "btn btn-dark">delete</button>
+        </form>
+
+    </div>
+    <hr>
+    <div class="col-8 offset-2">
+        <h4>LEAVE COMMENT</h4>
+       <form method="post" action="/listing/<%= listen._id %>/reviews" novalidate class="needs-validation">
+            <div>
+                <label for="rating" class="form-label" >RATING</label>
+                <input type="range" id="rating" name="rating[review] " min="1" max="5"  class="form-range">
+            </div>
+            <div>
+                <label for="comment">comment</label>
+                <textarea id="comment" name="comment[review]" rows="5" cols="50" class="form-control" required></textarea>
+                <div class="invalid-feedback">please enter a comment</div>
+            </div>
+            <button class ="btn btn-dark" >SUBMIT</button>
+        </form>
+    </div>
+</hr>
+<h4>ALL REVIEW</h4>
+<ul>
+<% for(review of listen.reviews){ %>
+<li><%= review.comment %> <%= review.rating %> </li>
+
+ <% } %>
+</ul>
+</body>

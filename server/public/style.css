@@ -1,0 +1,58 @@
+.navbar{
+    height: 5rem;
+}
+.navbar-brand{
+    font-size: 2rem;
+    color: rgb(172, 26, 26);
+}
+.info-link{
+    text-decoration: none;
+    color: black;
+}
+.info-link:hover{
+    text-decoration: underline;
+}
+.info{
+    background-color: aliceblue;
+    height: 8rem;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: wrap;
+
+}
+.info-social-link{
+    font-size: 1.5rem;
+    margin: auto;
+}
+.card{
+    border: none;
+    margin: 1rem;
+
+}
+.card-img-top{
+   border-radius: 10%;
+   object-fit: cover;
+
+
+}
+.link{
+    text-decoration: none;
+    color: black;
+}
+.card-img-overlay{
+    opacity: 0;
+}
+.card-img-overlay:hover{
+    opacity: 0.2;
+    background-color: white;
+}
+.card-img-top.show.img{
+    width:50vh  !important;
+    
+}
+.edit{
+    display: flex;
+    flex: wrap;
+}

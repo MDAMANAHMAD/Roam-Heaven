@@ -1,0 +1,26 @@
+<% layout('layouts/boilerplate') %>
+<body>
+    <h1>WANDERLUST</h1>
+    <form method="get" action="/listing/new">
+        <button class="btn btn-dark">ADD NEW PLACE</button>
+    </form>
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <% for(let values of value) { %>
+                <a href="/listing/<%= values._id %>" class= link>
+                <div class="col">
+                    <div class="card h-100">
+                        <img src="<%= values.image.url %>" class="card-img-top" alt="listing image" style="height: 200px ">
+                        <div class="card-img-overlay"></div>
+                        <div class="card-body">
+                           <b><h5 class="card-title"><%= values.title %></h5></b>
+                            <p class="card-text"><%= values.description %></p>
+                            <p class="card-text">&#8377;<%= values.price.toLocaleString('en-IN') %>/night</p>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>

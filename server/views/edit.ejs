@@ -1,0 +1,39 @@
+<% layout('layouts/boilerplate') %>
+<body>
+    <form method="post" action="/listing/<%= listen._id %>?_method=PUT" novalidate class="needs-validation">
+      <div class="mb-3"> 
+        <label for = 'title' class="form-label">Title</label>
+        <input type="text" name="title"  value="<%= listen.title %>" class="form-control" required>
+        <div class="invalid-feedback">Please enter a title</div>
+      </div>
+       <div class="mb-3">
+        <label for = 'location' class="form-label">Location</label>
+        <input type="text" name="location" value="<%= listen.location %>" class="form-control" required> 
+        <div class="invalid-feedback">Please enter a location</div>
+       </div>
+        <div class="mb-3">
+        <label for = 'description' class="form-label">Description</label>
+        <input type="text" name="description" value="<%= listen.description %>" class="form-control" required>
+        <div class="invalid-feedback">Please enter a description/div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+        <label for = 'price' class="form-label">Price</label>
+        <input type="number" name="price" value="<%= listen.price %>" class="form-control" required>
+        <div class="invalid-feedback">Please enter a price</div>
+        </div>
+        
+        <label for = 'country' class="form-label">Country</label>
+        <input type="text" name="country" value="<%= listen.country %>" class="form-control" required>
+        </div>
+        <div class="invalid-feedback">Please enter a country</div>
+      </div>
+     
+      <div class="mb-3">
+        <label for = 'url' class="form-label">Image URL</label>
+        <input type="text" name="url" value="<%= listen.image.url %>" class="form-control" required>
+      </div>
+      <button class = "btn btn-danger">EDIT</button>
+    </form>
+    
+</body>
