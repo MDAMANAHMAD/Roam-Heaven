@@ -53,10 +53,7 @@ const sendConfirmationEmail = async (to, bookingDetails) => {
 };
 
 // Middlewares
-app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true
-}));
+app.use(cors()); // Allow all origins for production ease, or specify your vercel URL
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(method('_method'));
