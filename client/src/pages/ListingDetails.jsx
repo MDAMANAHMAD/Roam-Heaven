@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Share, Heart, MapPin, Trash2, Edit, Calendar, Users, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 function ListingDetails() {
   const { id } = useParams();
